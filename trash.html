@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>回收箱 - 已回收物品</h2>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-4">
+    {% for item in items %}
+        {% if item.is_deleted %}
+            <div class="col">
+                <div class="card h-100">
+                    <img src="{{ url_for('static', filename='uploads/' + item.clothes_photo_path.split('/')[-1]) }}" class="card-img-top" alt="{{ item.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.name }}</h5>
+                        <p class="card-text"><strong>櫃位:</strong> {{ item.wardrobe }}</p>
+                        <p class="card-text"><strong>類別:</strong> {{ item.category }}</p>
+                        <p class="card-text"><strong>色系:</strong> {{ item.color }}</p>
+                        <p class="card-text">{{ item.description }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <!-- 還原物品表單 -->
+                        <form action="{{ url_for('restore_item', item_id=item.id) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-success">還原</button>
+                        </form>
+                        <form action="{{ url_for('realdelete_item', item_id=item.id) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('確定要永久刪除嗎?')">永久刪除</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+{% endblock %}

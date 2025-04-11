@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>新增物品資料</h1>
+    <form action="/add_item" method="POST" enctype="multipart/form-data">
+        <!-- 學生資料欄位 -->
+        <div class="mb-3">
+            <label for="name" class="form-label">名稱</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="category" class="form-label">類別</label>
+            <select class="form-select" id="category" name="category" required>
+                <option value="上身">上身</option>
+                <option value="下身">下身</option>
+                <option value="連身">連身</option>
+                <option value="其他">其他</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="color" class="form-label">顏色</label>
+            <select class="form-select" id="color" name="color" required>
+                <option value="暖色">暖色</option>
+                <option value="冷色">冷色</option>
+                <option value="黑白">黑白</option>
+                <option value="其他">其他</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="wardrobe" class="form-label">櫃位</label>
+            <select class="form-select" id="wardrobe" name="wardrobe" required>
+                <option value="A">A櫃</option>
+                <option value="B">B櫃</option>
+                <option value="C">C櫃</option>
+            </select>
+        </div>
+
+
+        <div class="mb-3">
+            <label for="description" class="form-label">其他描述</label>
+            <input type="text" class="form-control" id="description" name="description">
+        </div>
+
+     
+        <div class="mb-3">
+            <label for="photo" class="form-label">物品照片</label>
+            <input type="file" class="form-control" id="photo" name="photo" accept="image/*" capture="user" required>
+            <div>
+                <video id="camera" width="320" height="240" autoplay style="display:none;"></video>
+                <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+                <img id="captured-photo" style="display:none;" />
+            </div>
+            <button type="submit" class="btn btn-primary" id="snap">拍照</button>
+            <button type="button" class="btn btn-secondary" id="retake" style="display:none;">重新拍照</button>
+        </div>
+        <button type="submit" class="btn btn-primary">提交</button>
+    </form>
+
+    <script>
+        const video = document.getElementById('camera');
+        const canvas = document.getElementById('canvas');
+        const snap = document.getElementById('snap');
+        const photoInput = document.getElementById('photo');
+        const retake = document.getElementById('retake');
+        const capturedPhoto = document.getElementById('captured-photo');
+
+        function startCamera() {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.style.display = "block";
+                video.srcObject = stream;
+            });
+        }
+        
+        snap.addEventListener('click', () => {
+            canvas.style.display = "block";
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, 320, 240);
+
+            // 生成唯一文件名
+            const uniqueFileName = `photo_${Date.now()}.jpg`; /*日期語法討納否能夠更簡短面望從*/
+
+            // 將拍攝的圖像轉換成文件格式並設置到表單中
+            canvas.toBlob(blob => {
+                const file = new File([blob], uniqueFileName, { type: "image/jpeg" });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                photoInput.files = dataTransfer.files;
+
+                // 停止攝影機
+                video.srcObject.getTracks().forEach(track => track.stop());
+
+                // 顯示照片Preview
+                const imageUrl = URL.createObjectURL(blob);
+                capturedPhoto.src = imageUrl;
+                capturedPhoto.style.display = "block";
+
+                // 隐藏视频流和画布
+                video.style.display = "none";
+                canvas.style.display = "none";
+                snap.style.display = "none";
+                retake.style.display = "block";
+
+            }, "image/jpeg");
+        });
+
+        retake.addEventListener('click', () => {
+            capturedPhoto.style.display = "none";
+            retake.style.display = "none";
+            snap.style.display = "block";
+            startCamera();
+        });
+
+        // 開啟攝影機
+        startCamera();
+    </script>
+{% endblock %}

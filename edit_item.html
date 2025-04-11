@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>編輯物品資料</h2>
+<form action="{{ url_for('edit_item', item_id=item.id) }}" method="POST" enctype="multipart/form-data">
+    <div class="form-group m-2">
+        <label for="name">名稱</label>
+        <input type="text" class="form-control" id="name" name="name" value="{{ item.name }}" required>
+    </div>
+    <div class="form-group m-2">
+        <label for="wardrobe">櫃位</label>
+        <select class="form-control" id="wardrobe" name="wardrobe">
+            <option value="A" {% if item.wardrobe == 'A' %}selected{% endif %}>A櫃</option>
+            <option value="B" {% if item.wardrobe == 'B' %}selected{% endif %}>B櫃</option>
+            <option value="C" {% if item.wardrobe == 'C' %}selected{% endif %}>C櫃</option>
+        </select>
+    </div>
+    <div class="form-group m-2">
+        <label for="category">類別</label>
+        <select class="form-control" id="category" name="category">
+            <option value="上身" {% if item.wardrobe == '上身' %}selected{% endif %}>上身</option>
+            <option value="下身" {% if item.wardrobe == '下身' %}selected{% endif %}>下身</option>
+            <option value="連身" {% if item.wardrobe == '連身' %}selected{% endif %}>連身</option>
+            <option value="其他" {% if item.wardrobe == '其他' %}selected{% endif %}>其他</option>
+        </select>
+    </div>
+    <div class="form-group m-2">
+        <label for="color">色系</label>
+        <select class="form-control" id="color" name="color">
+            <option value="暖色" {% if item.wardrobe == '暖色' %}selected{% endif %}>暖色</option>
+            <option value="冷色" {% if item.wardrobe == '冷色' %}selected{% endif %}>冷色</option>
+            <option value="黑白" {% if item.wardrobe == '黑白' %}selected{% endif %}>黑白</option>
+            <option value="其他" {% if item.wardrobe == '其他' %}selected{% endif %}>其他</option>
+        </select>
+    </div>
+  
+    <div class="form-group m-2">
+        <label for="description">其他描述</label>
+        <input type="text" class="form-control" id="description" name="description" value="{{ item.description }}" >
+    </div>
+    <div class="form-group m-2">
+        <label for="photo">物品照片</label>
+        <input type="file" class="form-control  m-2" id="photo" name="photo">
+        {% if item.clothes_photo_path %}
+        <img src="{{ url_for('static', filename='uploads/' + item.clothes_photo_path.split('/')[-1]) }}" alt="物品照片" style="max-width: 200px;">
+        {% endif %}
+    </div>
+    <button type="submit" class="btn btn-success">更新物品資料</button>
+</form>
+<form action="{{ url_for('delete_item', item_id=item.id) }}" method="POST" style="display:inline;">
+        <button type="submit" class="btn btn-danger" onclick="return confirm('確定要回收嗎？')">舊衣回收</button>
+</form>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>新增物品資料</h1>
+    <form action="/add_item" method="POST" enctype="multipart/form-data">
+        <!-- 學生資料欄位 -->
+        <div class="mb-3">
+            <label for="name" class="form-label">名稱</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="category" class="form-label">類別</label>
+            <select class="form-select" id="category" name="category" required>
+                <option value="上身">上身</option>
+                <option value="下身">下身</option>
+                <option value="連身">連身</option>
+                <option value="其他">其他</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="color" class="form-label">顏色</label>
+            <select class="form-select" id="color" name="color" required>
+                <option value="暖色">暖色</option>
+                <option value="冷色">冷色</option>
+                <option value="黑白">黑白</option>
+                <option value="其他">其他</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="wardrobe" class="form-label">櫃位</label>
+            <select class="form-select" id="wardrobe" name="wardrobe" required>
+                <option value="A">A櫃</option>
+                <option value="B">B櫃</option>
+                <option value="C">C櫃</option>
+            </select>
+        </div>
+
+
+        <div class="mb-3">
+            <label for="description" class="form-label">其他描述</label>
+            <input type="text" class="form-control" id="description" name="description">
+        </div>
+
+     
+        <div class="mb-3">
+            <label for="photo" class="form-label">物品照片</label>
+            <input type="file" class="form-control" id="photo" name="photo" required>
+        </div>
+        <button type="submit" class="btn btn-primary">提交</button>
+    </form>
+{% endblock %}
